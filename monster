@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
+# (c) 2011-2014 Wojciech Kaczmarek. All rights reserved.
+# Released under the BSD 2-clause license - see this for details:
+# http://github.com/herenowcoder/monster/blob/master/LICENSE
 
 $0 = MYNAME = 'monster'
 pidquery = RUBY_PLATFORM=~/freebsd/ ? "^ruby.*: #{MYNAME}" : "^#{MYNAME}"
