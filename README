@@ -1,5 +1,7 @@
 monster
-======
+=======
 
-A template for insanely simplified process monitor similar to `god'
-as a one-file Ruby script.
+A template for insanely simplified process monitor similar to `god'.
+Instead of being a monitoring framework, it is a one-file Ruby script.
+
+Enjoy!
