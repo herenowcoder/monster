@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+
+$0 = MYNAME = 'monster'
+pidquery = RUBY_PLATFORM=~/freebsd/ ? "^ruby.*: #{MYNAME}" : "^#{MYNAME}"
+my_pids = %x/pgrep -f '#{pidquery}'/.split
+if $?.exitstatus == 0 and other_pid=my_pids.select{|x| x.to_i != $$}.first
+  puts "#{MYNAME} already running with pid=#{other_pid}"
+  exit 1
+end
+
+
+Sleep_after_checks = 10 #[s]
+
+# Matrix entry is: [description, check, runner, grace_time_in_s, state]        
+Matrix = [["dummy", proc{false}, proc{:ok}, 3],
+         ]
+
+# state is: [last_operation, timestamp]                                        
+Matrix.each {|entry| entry << [nil,Time.now]}
+
+require 'syslog'
+Syslog.open MYNAME, Syslog::LOG_PID | Syslog::LOG_NDELAY, Syslog::LOG_LOCAL1
+
+Signal.trap('HUP', 'IGNORE')
+Process.daemon
+
+loop do
+  Matrix.each do |dsc, check, runner, grace_time, state|
+    op,t0 = state
+    if op == :starting
+      next if (Time.now - t0) < grace_time
+    end
+    unless check.call
+      Syslog.notice "starting #{dsc}"
+      state[0] = :starting
+      state[1] = Time.now
+      unless runner.call
+        Syslog.notice "failed starting #{dsc}: #{$?}"
+        break
+      end
+    end
+  end
+  sleep Sleep_after_checks
+end
