@@ -1,0 +1,5 @@
+monster
+======
+
+A template for insanely simplified process monitor similar to `god'
+as a one-file Ruby script.
