@@ -11,7 +11,8 @@ end
 
 Sleep_after_checks = 10 #[s]
 
-# Matrix entry is: [description, check, runner, grace_time_in_s, state]        
+# Here you fill your codes/processes to run
+# Matrix entry is: [description, check, runner, grace_time_in_s]
 Matrix = [["dummy", proc{false}, proc{:ok}, 3],
          ]
 
